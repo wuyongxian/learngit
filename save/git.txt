@@ -142,6 +142,22 @@ git pull origin dev
    如果此时要强行删除，需要使用‘-D' 参数 git branch -D plan1
 
 
+--标签
+命令git tag <tagname>用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+命令git tag -a <tagname> -m "blablabla..."可以指定标签信息；
+命令git tag可以查看所有标签。
+命令git show查看标签信息
+
+git tag -d [tagname]:删除一个本地标签
+git push origin [tagname]:推送某一个标签到远程
+git push origin --tags:推送全部尚未推送的标签到远程
+
+删除一个远程标签步骤是：
+>git tag -d [tagname]：从本地删除标签
+>git push origin :refs/tags/[tagname]:从远程删除此标签
+
+
+
 
 
 
