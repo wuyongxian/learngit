@@ -1,0 +1,175 @@
+url:  https://www.liaoxuefeng.com/wiki/896043488029600
+git 切换到盘符方式
+cd /e
+命令 
+$ mddir dir  //创建文件夹
+$ pwd  //显示当前目录
+
+git 常用查看命令
+git status:当前git版本的状态
+git log:查看每个版本的历史
+git log --pretty=oneline:以单行的形式查看简化版的版本历史
+git reflog:查看历史提交命令
+git diff:查看当前版本已修改的内容
+cat [filename]:查看当前文件的内容
+ls：查看当前git仓库的文件列表
+git remote -v:查看远程库信息
+
+
+
+--初始化
+初始化一个Git仓库，使用git init命令。
+添加文件到Git仓库，分两步：
+使用命令git add <file>，注意，可反复多次使用，添加多个文件；
+使用命令git commit -m <message>，完成。
+
+--git状态
+要随时掌握工作区的状态，使用git status命令。
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
+
+--git回退和返回
+HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset --hard commit_id。
+HEAD表示当前版本,HEAD^表示上一个版本,HEAD~100表示前100个版本
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+
+--工作区和暂存区
+工作区（working directory)
+就是当前电脑可以看到的目录
+
+--版本库（repository)
+git的版本库存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，
+还有git为我们创建的第一个分支master，以及指向master的一个指针HEAD
+git add 命令即把文件修改添加到暂存区
+git commit命令，即把暂存区的所有内容提交到当前分支
+
+--撤销修改
+场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，
+第一步用命令git reset HEAD <file>，就回到了场景1，第二步按场景1操作。
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，
+使用命令git reset --hard commit_id回退到指定的版本（参考版本回退一节，不过前提是没有推送到远程库）。
+
+附：cat file 命令，可以查看文件的具体内容
+
+--删除文件
+rm [filename]命令,把文件从工作区删除
+git rm [filename]+git commit ... 命令,把文件从暂存区删除
+如果执行了rm [filename]命令,但没有从暂存区把文件删除,则可以使用 git checkout -- [filename]命令把文件从暂存区找回
+git checkout:其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”
+
+--远程仓库
+邮件地址:ly_wyx@163.com
+git博客链接:https://www.liaoxuefeng.com/wiki/896043488029600/896954117292416
+--github远程库设置
+1、创建SSH Key，任意目录打开git命令工具，输入  $ ssh-keygen -t rsa -C "youremail@example.com"，并找到创建的 id_rsa.pub文件
+2、登录github，打开 Account setting-SSH Keys页面
+3、点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容
+4、在github上创建一个项目
+5、把本地仓库与github上建立的仓库关联，使用命令git remote add origin git@server-name:path/repo-name.git；
+（我的git项目地址：git@github.com:wuyongxian/learngit.git）
+6、关联后，使用命令git push -u origin master第一次推送master分支的所有内容；
+由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令
+此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
+
+--从远程库克隆（可以选择另外一台电脑测试）
+git clone [url]命令，把远程git仓库文件克隆到当前文件夹
+cd [dir name] 切换到当前的git仓库
+git pull 拉取远程服务器的文件更新
+ls：查看当前git仓库的目录
+Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快
+
+
+--分支
+
+1、git切换到项目目录
+2、使用 git branch dev 创建dev分支
+（使用中有遇到因为当前存在HEAD分支而无法创建dev分支的情况，报错信息：
+git warning: refname 'HEAD' is ambiguous,这时可以使用 git branch -D HEAD 命令删除本地的HEAD分支，再继续操作）
+3、使用 git checkout dev 切换到dev分支
+（这时远程仓库如何还没有dev分支，使用git status命令可以看到在当前dev分支下有文件需要提交，则可使用  git gui将当前的dev分支提交到远程仓库）
+4、使用 git branch命令查看 可以看到除了master以外还有新的dev分支
+5、使用 git merge 命令合并分支（有时报错“refusing to merge unrelated histories“，这时可以使用”$ git merge dev --allow-unrelated-histories“命令强行合并
+
+--git新分支的提交
+>本地库中新建文本‘dev.txt’
+>git add dev.txt:将更改提交到本地暂存区
+>git commit -m "add dev.txt"：提交暂存区更改
+>git push origin dev 将更新推送到远程服务器的dev分支(如果此时远程服务器没有dev分支，则会在远程服务器自动创建dev分支）
+>git branch -r：查看远程服务器的git分支情况
+--其他电脑获取新分支
+方式1（建议方式）：
+>git fetch origin dev：获取远程的新分支
+>git checkout dev：将本地分支切换到dev
+>git merge origin/dev 将本地的dev分支与远程的dev分支合并
+方式2：
+$ git pull <远程库名> <远程分支名>:<本地分支名>
+>比如，取回远程库中的dev分支，与本地的dev分支进行merge，要写成：
+git pull origin dev:dev
+>如果是要与本地当前分支merge，则冒号后面的<本地分支名>可以不写
+git pull origin dev
+方式3：
+>git pull:在新电脑上拉取服务器代码
+>git checkout -b dev origin/dev:在本地创建和远程分支对应的分支
+>git branch --set-upstream dev origin/dev:建立本地分支和远程分支的关联
+但是在执行第三步时报错“fatal: the '--set-upstream' option is no longer supported. Please use '--track'”
+后面试了下执行完第二步之后，也可以向远程服务器push成功，具体原因不理解
+
+
+其实git pull origin 等同于先做了 git fetch，再做了git merge
+命令：
+查看分支：git branch
+创建分支：git branch <name>
+切换分支：git checkout <name>
+创建+切换分支：git checkout -b <name>
+合并某分支到当前分支：git merge <name>
+删除分支：git branch -d <name>
+查看远程服务器分支：git fetch origin <name>
+查看分支合并图：git log --graph
+删除远程分支：git push origin --delete <branchName>
+
+
+
+--feature分支
+用于新功能开发，不对原有分支造成影响
+>git checkout -b plan1:创建新分支plan1，并切换到新分支
+>在plan1分支进行新开发工作
+>开发完成后提交plan1的更改，但不需要推送的远程仓库
+>git checkout dev:切换到本地dev仓库
+>git merge plan1：将plan1分支的更改合并到dev分支
+>git branch -d plan1 将plan1分支删除
+>如果 plan1分支在未合并之前进行删除则会提示未合并消息“error: The branch 'plan1' is not fully merged.”  
+   如果此时要强行删除，需要使用‘-D' 参数 git branch -D plan1
+
+
+
+
+
+
+
+git的安装
+https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000
+
+
+安装node和npm
+https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/00143450141843488beddae2a1044cab5acb5125baf0882000
+
+>进入node环境
+打开cmd
+输入 node
+>推出node环境
+连续两次Ctrl+C
+
+
+npm:npm其实是Node.js的包管理工具（package manager）
+
+淘宝镜像（cnpm）的安装和使用
+https://www.cnblogs.com/leehf/p/7256305.html
+安装好npm(安装好node后,windows会默认安装好npm),继续输入 npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+
+vue调试工具vue-devtools安装及使用
+https://www.cnblogs.com/yuqing6/p/7440549.html
+
+服务器信息：
+launch-advisor-20190311	i-8vbcm5gh7jhkq0l5isyg	39.98.70.76
